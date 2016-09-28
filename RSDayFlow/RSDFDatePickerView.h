@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param startDate The first selectable date.
  @param endDate The last selectable date.
  */
-- (instancetype)initWithFrame:(CGRect)frame calendar:(nullable NSCalendar *)calendar startDate:(nullable NSDate *)startDate endDate:(nullable NSDate *)endDate;
+- (instancetype)initWithFrame:(CGRect)frame calendar:(NSCalendar *)calendar rangeSelection:(BOOL)rangeSelection startDate:(nullable NSDate *)startDate endDate:(nullable NSDate *)endDate;
 
 ///-----------------------------
 /// @name Accessing the Delegate
@@ -123,6 +123,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 - (void)selectDate:(nullable NSDate *)date;
+
+- (void)selectFrom:(NSDate *)selectFromDate to:(NSDate *)selectToDate;
 
 ///-------------------------
 /// @name Reloading the Data

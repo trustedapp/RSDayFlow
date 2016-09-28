@@ -84,6 +84,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, getter = isOutOfRange) BOOL outOfRange;
 
 /**
+ A Boolean value that determines whether the cell is in of range or not (rangeStartDate, rangeEndDate)
+ */
+@property (nonatomic, getter = isInSelectionRange) BOOL inSelectionRange;
+
+@property (nonatomic) BOOL atRangeStart;
+
+@property (nonatomic) BOOL atRangeEnd;
+
+/**
  The color of the default mark image for the cell of the day. Default value is [UIColor colorWithRed:184/255.0f green:184/255.0f blue:184/255.0f alpha:1.0f].
  
  @discussion Will be used to create the mark image if `markImage` is equal to `nil`.
@@ -109,6 +118,8 @@ NS_ASSUME_NONNULL_BEGIN
 ///---------------------------------------
 /// @name Accessing Attributes of Subviews
 ///---------------------------------------
+
+- (CGRect)selectedImageViewFrame;
 
 /**
  The font of the text which displayed by the label of the day. Default value is [UIFont fontWithName:@"HelveticaNeue" size:18.0f].
@@ -263,6 +274,14 @@ NS_ASSUME_NONNULL_BEGIN
  @discussion Can be overridden in subclasses for customization.
  */
 - (nullable UIImage *)customDividerImage;
+
+- (void)renderSelectionRange;
+
+- (UIColor *)rangeMarkColor;
+
+- (CGRect)leftRangeMarkImageViewFrame;
+
+- (CGRect)rightRangeMarkImageViewFrame;
 
 @end
 

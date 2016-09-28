@@ -38,6 +38,8 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
 @property (nonatomic, readonly, strong) UIImageView *overlayImageView;
 @property (nonatomic, readonly, strong) UIImageView *markImageView;
 @property (nonatomic, readonly, strong) UIImageView *dividerImageView;
+@property (nonatomic, readonly, strong) UIImageView *leftRangeMarkImageView;
+@property (nonatomic, readonly, strong) UIImageView *rightRangeMarkImageView;
 
 @end
 
@@ -50,6 +52,8 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
 @synthesize markImageColor = _markImageColor;
 @synthesize markImageView = _markImageView;
 @synthesize dividerImageView = _dividerImageView;
+@synthesize leftRangeMarkImageView = _leftRangeMarkImageView;
+@synthesize rightRangeMarkImageView = _rightRangeMarkImageView;
 
 #pragma mark - Lifecycle
 
@@ -75,6 +79,8 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
 {
     self.backgroundColor = [self selfBackgroundColor];
     
+    [self addSubview:self.leftRangeMarkImageView];
+    [self addSubview:self.rightRangeMarkImageView];
     [self addSubview:self.selectedDayImageView];
     [self addSubview:self.overlayImageView];
     [self addSubview:self.markImageView];
@@ -185,9 +191,46 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
     return _selectedDayImageView;
 }
 
+- (UIImageView *)leftRangeMarkImageView
+{
+    if (!_leftRangeMarkImageView) {
+        _leftRangeMarkImageView = [[UIView alloc] initWithFrame:[self leftRangeMarkImageViewFrame]];
+        _leftRangeMarkImageView.backgroundColor = [self rangeMarkColor];
+        _leftRangeMarkImageView.contentMode = UIViewContentModeCenter;
+    }
+    return _leftRangeMarkImageView;
+}
+
+- (UIImageView *)rightRangeMarkImageView
+{
+    if (!_rightRangeMarkImageView) {
+        _rightRangeMarkImageView = [[UIImageView alloc] initWithFrame:[self rightRangeMarkImageViewFrame]];
+        _rightRangeMarkImageView.backgroundColor = [self rangeMarkColor];
+        _rightRangeMarkImageView.contentMode = UIViewContentModeCenter;
+    }
+    return _rightRangeMarkImageView;
+}
+
+- (UIColor *)rangeMarkColor
+{
+    return [UIColor blueColor];
+}
+
 - (CGRect)selectedImageViewFrame
 {
-    return CGRectMake(roundOnBase(CGRectGetWidth(self.frame) / 2 - 17.5f, [UIScreen mainScreen].scale), roundOnBase(5.5, [UIScreen mainScreen].scale), 35.0f, 35.0f);
+    return CGRectMake(roundOnBase(CGRectGetWidth(self.frame) / 2 - 14.0f, [UIScreen mainScreen].scale), roundOnBase(5.5, [UIScreen mainScreen].scale), 28.0f, 28.0f);
+}
+
+- (CGRect)leftRangeMarkImageViewFrame
+{
+    CGRect rect = self.selectedImageViewFrame;
+    return CGRectMake(0, rect.origin.y, CGRectGetWidth(self.frame) / 2, rect.size.height);
+}
+
+- (CGRect)rightRangeMarkImageViewFrame
+{
+    CGRect rect = self.selectedImageViewFrame;
+    return CGRectMake(CGRectGetWidth(self.frame) / 2, rect.origin.y, CGRectGetWidth(self.frame) / 2, rect.size.height);
 }
 
 - (void)setMarkImage:(UIImage *)markImage
@@ -211,13 +254,29 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
 
 #pragma mark - Private
 
+- (void)setInSelectionRange:(BOOL)inSelectionRange
+{
+    if (inSelectionRange != _inSelectionRange) {
+        _inSelectionRange = inSelectionRange;
+        [self updateRangeMarks];
+    }
+}
+
+- (void)updateRangeMarks
+{
+    self.leftRangeMarkImageView.hidden = !self.inSelectionRange || self.isNotThisMonth || self.isOutOfRange || (self.selected && self.atRangeStart);
+    self.rightRangeMarkImageView.hidden = !self.inSelectionRange || self.isNotThisMonth || self.isOutOfRange || (self.selected && self.atRangeEnd);
+}
+
 - (void)updateSubviews
 {
     self.selectedDayImageView.hidden = !self.isSelected || self.isNotThisMonth || self.isOutOfRange;
     self.overlayImageView.hidden = !self.isHighlighted || self.isNotThisMonth || self.isOutOfRange;
     self.markImageView.hidden = !self.isMarked || self.isNotThisMonth || self.isOutOfRange;
-    self.dividerImageView.hidden = self.isNotThisMonth;
+    [self updateRangeMarks];
 
+    self.dividerImageView.hidden = self.isNotThisMonth;
+    
     if (self.isNotThisMonth) {
         self.dateLabel.textColor = [self notThisMonthLabelTextColor];
         self.dateLabel.font = [self dayLabelFont];
@@ -246,7 +305,6 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
                     self.dateLabel.font = [self todayLabelFont];
                     self.dateLabel.textColor = [self todayLabelTextColor];
                 }
-                
             } else {
                 if (!self.isToday) {
                     self.dateLabel.font = [self selectedDayLabelFont];
@@ -266,7 +324,7 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
             }
         }
     }
-
+    
 }
 
 + (NSCache *)imageCache
