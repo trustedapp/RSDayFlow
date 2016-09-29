@@ -264,8 +264,8 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
 
 - (void)updateRangeMarks
 {
-    self.leftRangeMarkImageView.hidden = !self.inSelectionRange || self.isNotThisMonth || self.isOutOfRange || (self.selected && self.atRangeStart);
-    self.rightRangeMarkImageView.hidden = !self.inSelectionRange || self.isNotThisMonth || self.isOutOfRange || (self.selected && self.atRangeEnd);
+    self.leftRangeMarkImageView.hidden = !self.inSelectionRange || self.isOutOfRange || (self.selected && self.atRangeStart);
+    self.rightRangeMarkImageView.hidden = !self.inSelectionRange || self.isOutOfRange || (self.selected && self.atRangeEnd);
 }
 
 - (void)updateSubviews

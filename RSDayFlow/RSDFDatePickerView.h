@@ -124,7 +124,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)selectDate:(nullable NSDate *)date;
 
-- (void)selectFrom:(NSDate *)selectFromDate to:(NSDate *)selectToDate;
+- (void)selectFrom:(nullable NSDate *)selectFromDate to:(nullable NSDate *)selectToDate;
 
 ///-------------------------
 /// @name Reloading the Data
