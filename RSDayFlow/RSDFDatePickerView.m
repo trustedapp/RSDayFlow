@@ -424,7 +424,7 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
     if (originStartIndex && originEndIndex) {
         [indexPaths addObjectsFromArray:[self indexPathsFrom:originStartIndex to:originEndIndex]];
     }
-    
+
     NSArray<NSIndexPath *> *visibleIndexPaths = [self.collectionView indexPathsForVisibleItems];
     for (NSIndexPath *indexPath in visibleIndexPaths) {
         [indexPaths removeObject:indexPath];
@@ -440,7 +440,7 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
         }
     }
     UICollectionView *vc = self.collectionView;
-    
+
     [vc performBatchUpdates:^{
         [vc reloadItemsAtIndexPaths:indexPaths.allObjects];
     } completion:nil];
@@ -619,17 +619,20 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 
 - (void)markCell:(RSDFDatePickerDayCell *)cell indexPath:(NSIndexPath *)indexPath ifInRange:(NSIndexPath *)startIndex endIndex:(NSIndexPath *)endIndex
 {
-    if (startIndex && endIndex && cell) {
-        if ((indexPath.section == startIndex.section && indexPath.item < startIndex.item) ||
-            indexPath.section < startIndex.section ||
-            indexPath.section > endIndex.section ||
-            (indexPath.section == endIndex.section && indexPath.item > endIndex.item)) {
-            cell.inSelectionRange = NO;
-        } else {
-            cell.atRangeStart = indexPath.section == startIndex.section && indexPath.item == startIndex.item;
-            cell.atRangeEnd = indexPath.section == endIndex.section && indexPath.item == endIndex.item;
-            cell.inSelectionRange = YES;
-        }
+    if (!startIndex || !endIndex) {
+        cell.inSelectionRange = NO;
+        return;
+    }
+
+    if ((indexPath.section == startIndex.section && indexPath.item < startIndex.item) ||
+        indexPath.section < startIndex.section ||
+        indexPath.section > endIndex.section ||
+        (indexPath.section == endIndex.section && indexPath.item > endIndex.item)) {
+        cell.inSelectionRange = NO;
+    } else {
+        cell.atRangeStart = indexPath.section == startIndex.section && indexPath.item == startIndex.item;
+        cell.atRangeEnd = indexPath.section == endIndex.section && indexPath.item == endIndex.item;
+        cell.inSelectionRange = YES;
     }
 }
 
