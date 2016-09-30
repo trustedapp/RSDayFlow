@@ -425,12 +425,25 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
         [indexPaths addObjectsFromArray:[self indexPathsFrom:originStartIndex to:originEndIndex]];
     }
     
-    for (NSIndexPath *indexPath in [self indexPathsFrom:startIndex to:endIndex]) {
+    NSArray<NSIndexPath *> *visibleIndexPaths = [self.collectionView indexPathsForVisibleItems];
+    for (NSIndexPath *indexPath in visibleIndexPaths) {
         [indexPaths removeObject:indexPath];
         RSDFDatePickerDayCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
         [self markCell:cell indexPath:indexPath ifInRange:startIndex endIndex:endIndex];
     }
-    [self.collectionView reloadItemsAtIndexPaths:indexPaths.allObjects];
+    
+    for (NSIndexPath *indexPath in [self indexPathsFrom:startIndex to:endIndex]) {
+        if (![visibleIndexPaths containsObject:indexPath]) {
+            [indexPaths removeObject:indexPath];
+            RSDFDatePickerDayCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+            [self markCell:cell indexPath:indexPath ifInRange:startIndex endIndex:endIndex];
+        }
+    }
+    UICollectionView *vc = self.collectionView;
+    
+    [vc performBatchUpdates:^{
+        [vc reloadItemsAtIndexPaths:indexPaths.allObjects];
+    } completion:nil];
 }
 
 #pragma mark - Helper Methods
@@ -606,7 +619,7 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 
 - (void)markCell:(RSDFDatePickerDayCell *)cell indexPath:(NSIndexPath *)indexPath ifInRange:(NSIndexPath *)startIndex endIndex:(NSIndexPath *)endIndex
 {
-    if (startIndex && endIndex) {
+    if (startIndex && endIndex && cell) {
         if ((indexPath.section == startIndex.section && indexPath.item < startIndex.item) ||
             indexPath.section < startIndex.section ||
             indexPath.section > endIndex.section ||
