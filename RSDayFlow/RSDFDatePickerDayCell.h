@@ -119,8 +119,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// @name Accessing Attributes of Subviews
 ///---------------------------------------
 
-- (CGRect)selectedImageViewFrame;
-
 /**
  The font of the text which displayed by the label of the day. Default value is [UIFont fontWithName:@"HelveticaNeue" size:18.0f].
  
@@ -286,8 +284,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**
   Trusted additions
  */
-- (void)renderSelectionRange;
-
 - (UIColor *)rangeMarkColor;
 
 - (CGRect)leftRangeMarkImageViewFrame;

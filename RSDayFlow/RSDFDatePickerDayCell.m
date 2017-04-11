@@ -194,7 +194,7 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
 - (UIImageView *)leftRangeMarkImageView
 {
     if (!_leftRangeMarkImageView) {
-        _leftRangeMarkImageView = [[UIView alloc] initWithFrame:[self leftRangeMarkImageViewFrame]];
+        _leftRangeMarkImageView = [[UIImageView alloc] initWithFrame:[self leftRangeMarkImageViewFrame]];
         _leftRangeMarkImageView.backgroundColor = [self rangeMarkColor];
         _leftRangeMarkImageView.contentMode = UIViewContentModeCenter;
     }
