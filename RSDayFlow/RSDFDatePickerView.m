@@ -396,7 +396,7 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
         }
     }
     
-    for (NSInteger item = 0; item <= to.item; item++) {
+    for (NSInteger item = 0; item < to.item; item++) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
         [indexPaths addObject:indexPath];
     }
@@ -428,14 +428,14 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
     NSArray<NSIndexPath *> *visibleIndexPaths = [self.collectionView indexPathsForVisibleItems];
     for (NSIndexPath *indexPath in visibleIndexPaths) {
         [indexPaths removeObject:indexPath];
-        RSDFDatePickerDayCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+        RSDFDatePickerDayCell *cell = (RSDFDatePickerDayCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
         [self markCell:cell indexPath:indexPath ifInRange:startIndex endIndex:endIndex];
     }
     
     for (NSIndexPath *indexPath in [self indexPathsFrom:startIndex to:endIndex]) {
         if (![visibleIndexPaths containsObject:indexPath]) {
             [indexPaths removeObject:indexPath];
-            RSDFDatePickerDayCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+            RSDFDatePickerDayCell *cell = (RSDFDatePickerDayCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
             [self markCell:cell indexPath:indexPath ifInRange:startIndex endIndex:endIndex];
         }
     }
@@ -985,33 +985,17 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
     //	105.0ms    1.5%	105.0	 	DYLD-STUB$$CFDictionarySetValue$shim
     return;
     
-    if (!self.startDate && pickerCollectionView.contentOffset.y < 0.0f) {
-        [self appendPastDates];
-    }
-    
-    if (!self.endDate && pickerCollectionView.contentOffset.y > (pickerCollectionView.contentSize.height - CGRectGetHeight(pickerCollectionView.bounds))) {
-        [self appendFutureDates];
-    }
+//    if (!self.startDate && pickerCollectionView.contentOffset.y < 0.0f) {
+//        [self appendPastDates];
+//    }
+//    
+//    if (!self.endDate && pickerCollectionView.contentOffset.y > (pickerCollectionView.contentSize.height - CGRectGetHeight(pickerCollectionView.bounds))) {
+//        [self appendFutureDates];
+//    }
 }
 
 #pragma mark - <UIScrollViewDelegate>
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-{
-    return;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.isPagingEnabled) {
-            if (!self.startDate && scrollView.contentOffset.y < CGRectGetHeight(scrollView.bounds) * 2) {
-                [self appendPastDates];
-            }
-            
-            if (!self.endDate && scrollView.contentOffset.y + CGRectGetHeight(scrollView.bounds) * 2 > scrollView.contentSize.height) {
-                [self appendFutureDates];
-            }
-        }
-    });
-}
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
