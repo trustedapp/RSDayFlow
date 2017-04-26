@@ -56,7 +56,7 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 @property (nonatomic, readonly, strong) NSDate *endDate;
 
 @property (nonatomic, readonly, strong) NSDate *rangeStartDate;
-@property (nonatomic, readonly, strong) NSDate *ranegeEndDate;
+@property (nonatomic, readonly, strong) NSDate *rangeEndDate;
 
 @property (nonatomic, strong) NSIndexPath *rangeStartIndex;
 @property (nonatomic, strong) NSIndexPath *rangeEndIndex;
@@ -389,6 +389,11 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
         [indexPaths addObject:indexPath];
     }
     section++;
+
+    if (section >= [self.collectionView numberOfSections]) {
+        return indexPaths;
+    }
+
     for (; section < to.section; section++) {
         for (NSInteger item = 0; item < [self.collectionView numberOfItemsInSection:section]; item++) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
@@ -410,10 +415,10 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
     NSIndexPath *originStartIndex = _rangeStartIndex;
     _rangeStartIndex = [self selectDateIfVisible:self.rangeStartDate];
     
-    [self deselectDateIfVisible:self.ranegeEndDate];
-    _ranegeEndDate = selectToDate;
+    [self deselectDateIfVisible:self.rangeEndDate];
+    _rangeEndDate = selectToDate;
     NSIndexPath *originEndIndex = _rangeEndIndex;
-    _rangeEndIndex = [self selectDateIfVisible:self.ranegeEndDate];
+    _rangeEndIndex = [self selectDateIfVisible:self.rangeEndDate];
     
     // render all cells between
     
@@ -640,7 +645,7 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 {
     if (self.rangeSelection) {
         [self selectDateIfVisible:self.rangeStartDate];
-        [self selectDateIfVisible:self.ranegeEndDate];
+        [self selectDateIfVisible:self.rangeEndDate];
     } else {
         [self selectDateIfVisible:self.selectedDate];
     }
