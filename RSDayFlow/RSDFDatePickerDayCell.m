@@ -49,6 +49,7 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
 @synthesize selectedDayImageView = _selectedDayImageView;
 @synthesize overlayImageView = _overlayImageView;
 @synthesize markImage = _markImage;
+@synthesize selectedMarkImage = _selectedMarkImage;
 @synthesize markImageColor = _markImageColor;
 @synthesize markImageView = _markImageView;
 @synthesize dividerImageView = _dividerImageView;
@@ -148,6 +149,15 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
     return _markImage;
 }
 
+- (UIImage *)selectedMarkImage
+{
+    if (!_selectedMarkImage) {
+        NSString *markImageKey = [NSString stringWithFormat:@"img_selected_mark_%@", [self.markImageColor description]];
+        _selectedMarkImage = [self ellipseImageWithKey:markImageKey frame:self.markImageView.frame color:self.markImageColor];
+    }
+    return _selectedMarkImage;
+}
+
 - (UIColor *)markImageColor
 {
     if (!_markImageColor) {
@@ -237,7 +247,16 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
 {
     if (![_markImage isEqual:markImage]) {
         _markImage = markImage;
-        
+
+        [self setNeedsDisplay];
+    }
+}
+
+- (void)setSelectedMarkImage:(UIImage *)markImage
+{
+    if (![_selectedMarkImage isEqual:markImage]) {
+        _selectedMarkImage = markImage;
+
         [self setNeedsDisplay];
     }
 }
@@ -318,7 +337,11 @@ CGFloat roundOnBase(CGFloat x, CGFloat base) {
             }
             
             if (self.marked) {
-                self.markImageView.image = self.markImage;
+                if (self.isSelected) {
+                    self.markImageView.image = self.selectedMarkImage;
+                } else {
+                    self.markImageView.image = self.markImage;
+                }
             } else {
                 self.markImageView.image = nil;
             }

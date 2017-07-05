@@ -103,6 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
  The mark image for the cell of the day. The default mark image is a small round mark.
  */
 @property (nonatomic, strong, nullable) UIImage *markImage;
+@property (nonatomic, strong, nullable) UIImage *selectedMarkImage;
 
 ///---------------------------------------
 /// @name Accessing Attributes of the View
@@ -284,6 +285,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
   Trusted additions
  */
+- (CGRect)markImageViewFrame;
+
 - (UIColor *)rangeMarkColor;
 
 - (CGRect)leftRangeMarkImageViewFrame;
