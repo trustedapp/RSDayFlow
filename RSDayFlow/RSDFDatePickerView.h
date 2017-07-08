@@ -193,6 +193,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CGFloat)daysOfWeekViewHeight;
 
+
+// Trusted Additions
+- (nullable UICollectionViewCell *)cellForDateIfVisible:(NSDate *)date;
+
 @end
 
 /**

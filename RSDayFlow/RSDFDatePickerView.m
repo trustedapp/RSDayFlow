@@ -369,6 +369,18 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
     return nil;
 }
 
+
+// Trusted Additions
+- (nullable UICollectionViewCell *)cellForDateIfVisible:(NSDate *)date
+{
+    if (date) {
+        NSIndexPath *indexPathForSelectedDate = [self indexPathForDate:date];
+        UICollectionViewCell *selectedCell = [self.collectionView cellForItemAtIndexPath:indexPathForSelectedDate];
+        return selectedCell;
+    }
+    return nil;
+}
+
 - (void)selectDate:(NSDate *)date
 {
     if (![self.selectedDate isEqual:date]) {
